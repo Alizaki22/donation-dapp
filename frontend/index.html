@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation DApp | Sepolia Testnet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .workshop-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            word-break: break-all;
+            text-align: left;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9edf2 100%);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .balance {
+            font-size: 48px;
+            font-weight: bold;
+            color: #4a5568;
+            margin: 10px 0;
+        }
+
+        .balance-unit {
+            font-size: 16px;
+            color: #718096;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 12px;
+        }
+
+        .refresh-btn {
+            background: #4299e1;
+            color: white;
+        }
+
+        .refresh-btn:hover {
+            background: #3182ce;
+        }
+
+        .donate-btn {
+            background: #48bb78;
+            color: white;
+        }
+
+        .donate-btn:hover {
+            background: #38a169;
+        }
+
+        .withdraw-btn {
+            background: #f56565;
+            color: white;
+        }
+
+        .withdraw-btn:hover {
+            background: #e53e3e;
+        }
+
+        .info-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .info-btn:hover {
+            background: #5a6268;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .button-group button {
+            flex: 1;
+        }
+
+        .status {
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .status.success {
+            background: #c6f6d5;
+            color: #22543d;
+            border-left: 4px solid #48bb78;
+        }
+
+        .status.error {
+            background: #fed7d7;
+            color: #742a2a;
+            border-left: 4px solid #f56565;
+        }
+
+        .status.info {
+            background: #bee3f8;
+            color: #2c5282;
+            border-left: 4px solid #4299e1;
+        }
+
+        .tx-hash {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 10px;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .tx-hash a {
+            color: #4299e1;
+            text-decoration: none;
+        }
+
+        .tx-hash a:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #f7fafc;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #718096;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Donation DApp on Sepolia</h1>
+            <p>Live on Ethereum Testnet</p>
+            <div class="workshop-badge">PDEU Blockchain Workshop | 3rd & 4th Apr 2026</div>
+        </div>
+
+        <div class="content">
+            <div class="info-box">
+                <strong>Backend Account:</strong> <span id="backendAccount">Loading...</span><br>
+                <strong>Contract:</strong> <span id="contractAddress">Loading...</span>
+            </div>
+
+            <div class="balance-card">
+                <div class="balance-label">Contract Balance</div>
+                <div class="balance" id="balance">0.00</div>
+                <div class="balance-unit">ETH</div>
+            </div>
+
+            <div class="button-group">
+                <button class="refresh-btn" onclick="getBalance()">Refresh Balance</button>
+                <button class="info-btn" onclick="getContractInfo()">Contract Info</button>
+            </div>
+
+            <input type="number" id="amount" placeholder="Enter amount in ETH" step="0.001" min="0.001">
+
+            <button class="donate-btn" onclick="donate()">Donate</button>
+            <button class="withdraw-btn" onclick="withdraw()">Withdraw (Owner Only)</button>
+
+            <div id="status" class="status">Ready</div>
+            <div id="txHash" class="tx-hash"></div>
+        </div>
+
+        <div class="footer">
+            <p>All transactions are signed by the backend account. No MetaMask required!</p>
+            <p>Dr. Deepak Kumar Sharma | Asst. Professor, ICT Department</p>
+            <p>Sponsored by IEEE Student Branch PDEU & IEEE ComSoc</p>
+            <p>3rd & 4th April 2026 | PDEU Gandhinagar</p>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost:5000";
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById("status");
+            statusDiv.innerHTML = message;
+            statusDiv.className = "status " + (type || "info");
+        }
+
+        function showTxHash(hash) {
+            const txDiv = document.getElementById("txHash");
+            if (hash) {
+                txDiv.innerHTML = 'Transaction: <a href="https://sepolia.etherscan.io/tx/' + hash + '" target="_blank">' + hash.substring(0, 10) + '...' + hash.substring(hash.length - 8) + '</a>';
+            } else {
+                txDiv.innerHTML = "";
+            }
+        }
+
+        function showLoading(message) {
+            showStatus(message + "...", "info");
+        }
+
+        async function getBackendInfo() {
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                document.getElementById("backendAccount").innerText = data.account.substring(0, 10) + "..." + data.account.substring(data.account.length - 6);
+                document.getElementById("contractAddress").innerText = data.contract.substring(0, 10) + "..." + data.contract.substring(data.contract.length - 6);
+                if (!data.error) {
+                    showStatus("Connected to backend", "success");
+                }
+            } catch (error) {
+                showStatus("Cannot connect to backend. Make sure Flask server is running on port 5000", "error");
+                document.getElementById("backendAccount").innerText = "Not connected";
+            }
+        }
+
+        async function getBalance() {
+            try {
+                showLoading("Fetching balance");
+                const res = await fetch(API_URL + "/balance");
+                const data = await res.json();
+                if (data.error) {
+                    showStatus("Error: " + data.error, "error");
+                } else {
+                    document.getElementById("balance").innerText = parseFloat(data.balance).toFixed(4);
+                    showStatus("Balance updated", "success");
+                }
+            } catch (error) {
+                showStatus("Error connecting to backend: " + error.message, "error");
+            }
+        }
+
+        async function getContractInfo() {
+            try {
+                showLoading("Fetching contract info");
+                const res = await fetch(API_URL + "/contract-info");
+                const data = await res.json();
+                if (data.error) {
+                    showStatus("Error: " + data.error, "error");
+                } else {
+                    showStatus(
+                        "Owner: " + data.owner.substring(0, 10) + "... | " +
+                        "Total Donations: " + parseFloat(data.total_donations).toFixed(4) + " ETH | " +
+                        "Balance: " + parseFloat(data.current_balance).toFixed(4) + " ETH",
+                        "success"
+                    );
+                    document.getElementById("balance").innerText = parseFloat(data.current_balance).toFixed(4);
+                }
+            } catch (error) {
+                showStatus("Error connecting to backend: " + error.message, "error");
+            }
+        }
+
+        async function donate() {
+            const amount = document.getElementById("amount").value;
+            if (!amount || amount <= 0) {
+                showStatus("Please enter a valid amount", "error");
+                return;
+            }
+            showLoading("Processing donation of " + amount + " ETH");
+            showTxHash(null);
+            try {
+                const res = await fetch(API_URL + "/donate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ amount: amount })
+                });
+                const data = await res.json();
+                if (data.error) {
+                    showStatus("Error: " + data.error, "error");
+                } else {
+                    showStatus("Donation successful! " + amount + " ETH sent", "success");
+                    showTxHash(data.tx_hash);
+                    getBalance();
+                    document.getElementById("amount").value = "";
+                }
+            } catch (error) {
+                showStatus("Error connecting to backend: " + error.message, "error");
+            }
+        }
+
+        async function withdraw() {
+            if (!confirm("Are you sure you want to withdraw all funds? This action can only be performed by the contract owner.")) {
+                return;
+            }
+            showLoading("Processing withdrawal");
+            showTxHash(null);
+            try {
+                const res = await fetch(API_URL + "/withdraw", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                });
+                const data = await res.json();
+                if (data.error) {
+                    showStatus("Error: " + data.error, "error");
+                } else {
+                    showStatus("Withdrawal successful! " + data.amount + " ETH withdrawn", "success");
+                    showTxHash(data.tx_hash);
+                    getBalance();
+                }
+            } catch (error) {
+                showStatus("Error connecting to backend: " + error.message, "error");
+            }
+        }
+
+        // Auto-refresh balance every 30 seconds
+        setInterval(getBalance, 30000);
+
+        // Initialize when page loads
+        window.onload = function() {
+            getBackendInfo();
+            getBalance();
+        };
+    </script>
+</body>
+</html>

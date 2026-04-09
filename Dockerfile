@@ -1,13 +1,11 @@
-FROM node:18
+FROM python:3.10-slim
 
 WORKDIR /app
 
 COPY . .
 
-# install python backend only
-RUN apt-get update && apt-get install -y python3 python3-pip
-RUN pip3 install --break-system-packages flask web3 flask-cors python-dotenv
+RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 5000 8080
+EXPOSE 10000
 
-CMD ["bash"]
+CMD ["python", "backend/app.py"]

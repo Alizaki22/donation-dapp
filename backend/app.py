@@ -21,7 +21,11 @@ print(f"RPC URL: {RPC_URL}")
 print(f"Contract Address: {CONTRACT_ADDRESS}")
 
 # Connect to Sepolia
-w3 = Web3(Web3.HTTPProvider(RPC_URL))
+if not RPC_URL:
+    print("❌ RPC_URL not set")
+    w3 = None
+else:
+    w3 = Web3(Web3.HTTPProvider(RPC_URL))
 
 if w3.is_connected():
     print("Connected to Sepolia successfully")

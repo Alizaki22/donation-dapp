@@ -26,10 +26,10 @@ print(f"Contract Address: {CONTRACT_ADDRESS}")
 
 w3 = Web3(Web3.HTTPProvider(RPC_URL))
 if w3.is_connected():
-print("Connected to Sepolia successfully")
-print(f"Current block: {w3.eth.block_number}")
+    print("Connected to Sepolia successfully")
+    print(f"Current block: {w3.eth.block_number}")
 else:
-print("⚠️ Failed to connect to Sepolia (app will still run)")
+    print("⚠️ Failed to connect to Sepolia (app will still run)")
 
 # Load account
 
